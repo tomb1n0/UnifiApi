@@ -4,8 +4,8 @@ namespace UnifiAPI;
 
 class API {
 
-	private $client;
-	private $controller;
+	protected $client;
+	protected $controller;
 
 	public function __construct($url, $site_name, $username, $password) {
 		$this->client = new \GuzzleHttp\Client([

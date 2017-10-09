@@ -4,10 +4,10 @@ namespace UnifiAPI;
 
 class Controller {
 
-	private $config;
-	private $site;
-	private $site_id;
-	private $api;
+	protected $config;
+	protected $site;
+	protected $site_id;
+	protected $api;
 
 	public function __construct($site_name, $api) {
 		$this->api = $api;

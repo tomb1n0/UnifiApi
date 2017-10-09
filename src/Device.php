@@ -17,10 +17,7 @@ class Device extends UnifiElement {
 	}
 
 	public function enable_management_vlan() {
-		// https://unifi:8443/api/s/qv7d8zqs/rest/device/59d26e8ce4b06feea2ec218e
-		// PUT request
-		// mgmt_network_id : 59ce6df8e4b06feea2ebf2ec
-		// switch_vlan_enabled: true
+
 	}
 
 }
