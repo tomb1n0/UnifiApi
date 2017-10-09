@@ -1,0 +1,15 @@
+{
+    "name": "tomb1n0/unifi_api",
+    "require": {
+        "guzzlehttp/guzzle": "^6.3"
+    },
+    "authors": [
+        {
+            "name": "Tom Harper",
+            "email": "tom@stickman.co.uk"
+        }
+    ],
+    "autoload": {
+        "psr-4": {"UnifiAPI\\": "src/"}
+    }
+}
