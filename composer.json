@@ -1,7 +1,7 @@
 {
     "name": "tomb1n0/unifiapi",
     "require": {
-        "guzzlehttp/guzzle": "^6.3"
+        "guzzlehttp/guzzle": "*"
     },
     "authors": [
         {
