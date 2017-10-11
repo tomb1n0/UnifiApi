@@ -21,6 +21,10 @@ abstract class UnifiElement {
 		return null;
 	}
 
+	public function __isset($key) {
+		return isset($this->config->$key);
+	}
+
 	// proxy requests for the controller through our api object
 	public function controller() {
 		return $this->api->controller();

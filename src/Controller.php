@@ -26,6 +26,11 @@ class Controller {
 		return $this->site_id;
 	}
 
+	public function device($mac_address) {
+		$device = $this->api->get('/api/s/' . $this->site_id . '/stat/device/' . $mac_address);
+		return new Device($device, $this->api);
+	}
+
 	public function devices() {
 		$devices = $this->api->get('/api/s/' . $this->site_id . '/stat/device');
 		return array_map(function ($device) {
