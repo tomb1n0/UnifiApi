@@ -21,4 +21,9 @@ abstract class UnifiElement {
 		return null;
 	}
 
+	// proxy requests for the controller through our api object
+	public function controller() {
+		return $this->api->controller();
+	}
+
 }

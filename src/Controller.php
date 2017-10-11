@@ -45,7 +45,9 @@ class Controller {
 	}
 
 	public function networks() {
-		return $this->api->get('/api/s/' . $this->site_id . '/rest/portconf');
+		return array_map(function ($network) {
+			return new Network($network, $this->api);
+		}, $this->api->get('/api/s/' . $this->site_id . '/rest/portconf'));
 	}
 
 	public function sites() {
