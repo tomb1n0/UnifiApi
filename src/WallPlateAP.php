@@ -2,7 +2,7 @@
 
 namespace UnifiAPI;
 
-class WallPlateAP extends UnifiElement {
+class WallPlateAP extends Device {
 
 	public function enable_port_vlan($network) {
 		if (!isset($network->native_networkconf_id)) {
