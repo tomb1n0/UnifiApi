@@ -34,7 +34,18 @@ class Controller {
 	public function devices() {
 		$devices = $this->api->get('/api/s/' . $this->site_id . '/stat/device');
 		return array_map(function ($device) {
-				return new Device($device, $this->api);
+				// figure out the type of device we're working with and return an instance of that, otherwise just return the default "device" object.
+				switch ($device->model) {
+					case 'U2IW':
+					case 'U7IW':
+					case "U7IWP":
+						return new WallPlateAP($device, $this->api);
+						break;
+					default:
+						return new Device($device, $this->api);
+						break;
+				}
+
 		}, $devices);
 	}
 
