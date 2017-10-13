@@ -21,6 +21,10 @@ abstract class UnifiElement {
 		return null;
 	}
 
+	public function getData() {
+		return $this->config;
+	}
+
 	public function __isset($key) {
 		return isset($this->config->$key);
 	}
