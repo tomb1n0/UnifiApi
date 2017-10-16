@@ -31,8 +31,8 @@ class Controller {
 		return new Device($device, $this->api);
 	}
 
-	public function devices() {
-		$devices = $this->api->get('/api/s/' . $this->site_id . '/stat/device');
+	public function devices($data = null) {
+		$devices = $this->api->get('/api/s/' . $this->site_id . '/stat/device', $data);
 		return array_map(function ($device) {
 				// figure out the type of device we're working with and return an instance of that, otherwise just return the default "device" object.
 				switch ($device->model) {
@@ -60,18 +60,46 @@ class Controller {
 		return $ret_devs;
 	}
 
-	public function networks() {
+	/**
+	 * Get networks from the controller, optionally providing some data to filter the networks on. (vlan, name etc)
+	 */
+	public function networks($data = null) {
 		return array_map(function ($network) {
 			return new Network($network, $this->api);
-		}, $this->api->get('/api/s/' . $this->site_id . '/rest/portconf'));
+		}, $this->api->get('/api/s/' . $this->site_id . '/rest/networkconf', $data));
+	}
+
+	public function port_confs($data = null) {
+		return array_map(function ($port_conf) {
+			return new PortConf($port_conf, $this->api);
+		}, $this->api->get('/api/s/' . $this->site_id . '/rest/portconf', $data));
+	}
+
+	public function port_conf_for_vlan($vlan_id) {
+		$port_conf = null;
+		$network = $this->networks(['vlan' => $vlan_id]);
+		if (!empty($network)) {
+			$port_conf = $this->port_confs(['native_networkconf_id' => $network[0]->_id]);
+			return $port_conf[0];
+		}
+		return $port_conf;
 	}
 
 	public function sites() {
 		return $this->api->get('api/self/sites');
 	}
 
-	public function controller() {
-		return $this->controller;
+	public function create_vlan($vlan_name, $vlan_number) {
+		$data = [
+			'purpose' => 'vlan-only',
+			'name' => $vlan_name,
+			'vlan' => $vlan_number,
+			'enabled' => true,
+			'is_nat' => true,
+			'vlan_enabled' => true,
+		];
+		// create the new vlan, this can potentially throw an exception if the VLAN already exists.
+		$this->api->post('/api/s/' . $this->site_id . '/rest/networkconf', $data);
 	}
 
 }

@@ -1,4 +1,6 @@
 <?php
+All pending changes were saved and applied successfully to 78:8a:20:80:9b:f9.
+
 
 require_once('vendor/autoload.php');
 
@@ -24,3 +26,7 @@ foreach ($devices as $device) {
 	// devices are returned as their own object which have a ref to the API
 	$device->adopt();
 }
+
+// you can fetch the networks from the controller, optionally providing data to filter on such as the VLAN number. pretty cool!
+// this isn't implemeneted everywhere (e.g. devices doesn't seem to allow taking an array to filter on for some reason)
+$networks = $controller->networks(['vlan' => 10]);

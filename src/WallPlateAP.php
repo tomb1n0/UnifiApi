@@ -4,26 +4,26 @@ namespace UnifiAPI;
 
 class WallPlateAP extends Device {
 
-	public function enable_port_vlan($network) {
-		if (!isset($network->native_networkconf_id)) {
+	public function enable_port_vlan($port_conf) {
+		if (!isset($port_conf->native_networkconf_id)) {
 			throw new \Exception('[enable_port_vlan] native_networkconf_id not provided');
 		}
-		$this->api->put('/api/s/' . $this->site_id .'/rest/device/' . $this->_id, ['mgmt_network_id' => $network->native_networkconf_id, 'switch_vlan_enabled' => true]);
+		$this->api->put('/api/s/' . $this->site_id .'/rest/device/' . $this->_id, ['mgmt_network_id' => $port_conf->native_networkconf_id, 'switch_vlan_enabled' => true]);
 	}
 
 	/**
 	 * 	Unfortunately you can't set the ports individually, you have to pass both through.
 	 */
-	public function set_port_networks($poe_network, $data_network) {
+	public function set_port_vlans($poe_port_conf, $data_port_conf) {
 		if (!$this->switch_vlan_enabled) {
 			throw new \Exception('[set_port_networks] this ap does not have switch_vlans enabled, please call enable_port_vlan() first with a management VLAN');
 		}
-		if (!isset($poe_network->_id) || !isset($data_network->_id)) {
+		if (!isset($poe_port_conf->_id) || !isset($data_port_conf->_id)) {
 			throw new \Exception('[set_port_networks] one or more networks provided do not have an _id');
 		}
 		$data = ['port_overrides' => []];
-		$data['port_overrides'][] = ['name' => 'PoE Out + Data', 'op_mode' => 'switch', 'port_idx' => '1', 'portconf_id'  => $poe_network->_id];
-		$data['port_overrides'][] = ['name' => 'Data', 'op_mode' => 'switch', 'port_idx' => '2', 'portconf_id'  => $data_network->_id];
+		$data['port_overrides'][] = ['name' => 'PoE Out + Data', 'op_mode' => 'switch', 'port_idx' => '1', 'portconf_id'  => $poe_port_conf->_id];
+		$data['port_overrides'][] = ['name' => 'Data', 'op_mode' => 'switch', 'port_idx' => '2', 'portconf_id'  => $data_port_conf->_id];
 		$this->api->put('/api/s/' . $this->site_id . '/rest/device/' . $this->_id, $data);
 	}
 
