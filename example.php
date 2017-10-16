@@ -1,6 +1,4 @@
 <?php
-All pending changes were saved and applied successfully to 78:8a:20:80:9b:f9.
-
 
 require_once('vendor/autoload.php');
 
