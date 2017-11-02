@@ -93,7 +93,7 @@ class Controller {
 		$data = [
 			'purpose' => 'vlan-only',
 			'name' => $vlan_name,
-			'vlan' => $vlan_number,
+			'vlan' => (string) $vlan_number,
 			'enabled' => true,
 			'is_nat' => true,
 			'vlan_enabled' => true,
