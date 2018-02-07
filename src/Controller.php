@@ -27,8 +27,8 @@ class Controller {
 	}
 
 	public function device($mac_address) {
-		$device = $this->api->get('/api/s/' . $this->site_id . '/stat/device/' . $mac_address);
-		return new Device($device, $this->api);
+		list($device) = $this->devices(['macs' => [$mac_address]]);
+		return $device;
 	}
 
 	public function devices($data = null) {
