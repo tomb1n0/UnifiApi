@@ -26,6 +26,15 @@ class Controller {
 		return $this->site_id;
 	}
 
+	public function online_clients() {
+		return array_map(
+			function ($client) {
+				return new Client($client, $this->api);
+			},
+			$this->api->get('/api/s/' . $this->site_id . '/stat/sta')
+		);
+	}
+
 	public function device($mac_address) {
 		list($device) = $this->devices(['macs' => [$mac_address]]);
 		return $device;
