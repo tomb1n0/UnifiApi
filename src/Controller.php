@@ -86,12 +86,36 @@ class Controller {
 
 	public function port_conf_for_vlan($vlan_id) {
 		$port_conf = null;
-		$network = $this->networks(['vlan' => $vlan_id]);
-		if (!empty($network)) {
-			$port_conf = $this->port_confs(['native_networkconf_id' => $network[0]->_id]);
-			return $port_conf[0];
+		$network = $this->network_conf_for_vlan($vlan_id);
+		if (!is_nulL($network)) {
+			$port_confs = $this->port_confs(['native_networkconf_id' => $network->_id]);
+			if (!empty($port_confs)) {
+				$port_conf = $port_confs[0];
+			}
 		}
 		return $port_conf;
+	}
+
+	public function network_conf_for_vlan($vlan_id) {
+		$network = null;
+		// go off to the controller to fetch all networks but with this specific vlan id
+		$networks = $this->networks(['vlan' => (string) $vlan_id]);
+		if (!empty($networks)) {
+			$network = $networks[0];
+		}
+		return $network;
+	}
+
+	public function switch_port_profile_for_native_vlan($vlan_id) {
+		$profile = null;
+		$network = $this->network_conf_for_vlan($vlan_id);
+		if (!is_null($network)) {
+			$profiles = $this->port_confs(['native_networkconf_id' => $network->_id, 'op_mode' => 'switch']);
+			if (!empty($profiles)) {
+				$profile = $profiles[0];
+			}
+		}
+		return $profile;
 	}
 
 	public function sites() {
