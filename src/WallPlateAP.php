@@ -4,11 +4,11 @@ namespace UnifiAPI;
 
 class WallPlateAP extends Device {
 
-	public function enable_port_vlan($port_conf) {
-		if (!isset($port_conf->native_networkconf_id)) {
-			throw new \Exception('[enable_port_vlan] native_networkconf_id not provided');
+	public function enable_port_vlan($network) {
+		if (!isset($network->_id)) {
+			throw new \Exception('[enable_port_vlan] network provided does not have an _id');
 		}
-		$this->api->put('/api/s/' . $this->site_id .'/rest/device/' . $this->_id, ['mgmt_network_id' => $port_conf->native_networkconf_id, 'switch_vlan_enabled' => true]);
+		$this->api->put('/api/s/' . $this->site_id .'/rest/device/' . $this->_id, ['mgmt_network_id' => $network->_id, 'switch_vlan_enabled' => true]);
 	}
 
 	/**
