@@ -26,4 +26,8 @@ class Device extends UnifiElement {
 		}
 	}
 
+	public function name($newname) {
+		$this->api->put('/api/s/' . $this->site_id . '/rest/device/' . $this->_id, ["name" => $newname]);
+	}
+
 }
