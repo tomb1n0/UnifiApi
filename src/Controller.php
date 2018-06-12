@@ -197,4 +197,8 @@ class Controller {
 		return $this->get_switch_port_profile($native_vlan, $tagged_vlans);
 	}
 
+	public function health($data = []) {
+		return $this->api->get('/api/s/' . $this->site_id . '/stat/health', $data);
+	}
+
 }
