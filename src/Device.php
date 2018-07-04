@@ -30,4 +30,12 @@ class Device extends UnifiElement {
 		$this->api->put('/api/s/' . $this->site_id . '/rest/device/' . $this->_id, ["name" => $newname]);
 	}
 
+	public function wlangroup($newgroup_id) {
+		$this->api->put('/api/s/' . $this->site_id . '/rest/device/' . $this->_id, [
+			'wlangroup_id_na' => $newgroup_id,
+			'wlangroup_id_ng' => $newgroup_id,
+			'wlan_overrides' => []
+		]);
+	}
+
 }
