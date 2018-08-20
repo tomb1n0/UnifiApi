@@ -8,7 +8,7 @@ abstract class UnifiElement {
 	protected $api;
 	protected $site_id;
 
-	public function __construct($data, $api) {
+	public function __construct($data, &$api) {
 		$this->api = $api;
 		$this->config = $data;
 		$this->site_id = $api->controller()->site_id();

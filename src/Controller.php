@@ -9,7 +9,7 @@ class Controller {
 	protected $site_id;
 	protected $api;
 
-	public function __construct($site_name, $api) {
+	public function __construct($site_name, &$api) {
 		$this->api = $api;
 		foreach ($this->sites() as $site) {
 			if ($site->desc == $site_name) {
