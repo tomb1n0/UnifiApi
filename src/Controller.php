@@ -2,6 +2,9 @@
 
 namespace UnifiAPI;
 
+use GuzzleHttp\Exception\ClientException;
+
+
 class Controller {
 
 	protected $config;
@@ -20,6 +23,10 @@ class Controller {
 		if (!isset($this->site)) {
 			throw new \Exception('No such site ' . $site_name . ' exists');
 		}
+	}
+
+	public function api() {
+		return $this->api;
 	}
 
 	public function site_id() {
@@ -41,7 +48,11 @@ class Controller {
 	}
 
 	public function devices($data = null) {
-		$devices = $this->api->get('/api/s/' . $this->site_id . '/stat/device', $data);
+		try {
+			$devices = $this->api->get('/api/s/' . $this->site_id . '/stat/device', $data);
+		} catch (ClientException $e) {
+			return null;
+		}
 		return array_map(function ($device) {
 				// figure out the type of device we're working with and return an instance of that, otherwise just return the default "device" object.
 				switch ($device->model) {

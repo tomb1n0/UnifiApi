@@ -6,6 +6,7 @@ class API {
 
 	protected $client;
 	protected $controller;
+	protected $global_controller;
 
 	public function __construct($url, $site_name, $username, $password) {
 		$this->client = new \GuzzleHttp\Client([
@@ -15,6 +16,7 @@ class API {
 		]);
 		$this->login($username, $password);
 		$this->controller = new Controller($site_name, $this);
+		$this->global_controller = new GlobalController($this->controller);
 	}
 
 	public function request($request_type, $url, $data = []) {
@@ -59,6 +61,10 @@ class API {
 
 	public function controller() {
 		return $this->controller;
+	}
+
+	public function global_controller() {
+		return $this->global_controller;
 	}
 
 }
