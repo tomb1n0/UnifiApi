@@ -21,6 +21,7 @@ class Device extends UnifiElement {
 			if ($firmware->device == $this->model) {
 				if ($firmware->version != $this->version) {
 					$this->api->post('/api/s/' . $this->site_id . '/cmd/devmgr', ['mac' => $this->mac, 'upgrade_to_firmware' => $firmware->version, 'cmd' => 'upgrade']);
+					break;
 				}
 			}
 		}
