@@ -49,12 +49,14 @@ class Controller {
 
 	public function devices($data = null) {
 		try {
-			$devices = $this->api->get('/api/s/' . $this->site_id . '/stat/device', $data);
+			$devices = $this->api->get('/api/s/' . $this->site_id . '/stat/device-basic', $data);
 		} catch (ClientException $e) {
 			return null;
 		}
 		return array_map(function ($device) {
 				// figure out the type of device we're working with and return an instance of that, otherwise just return the default "device" object.
+				$full_info = $this->api->get('/api/s/' . $this->site_id . '/stat/device', ['macs' => [$device->mac]]);
+				$device->model = $full_info[0]->model;
 				switch ($device->model) {
 					case 'U2IW':
 					case 'U7IW':
