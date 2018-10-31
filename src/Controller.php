@@ -47,9 +47,13 @@ class Controller {
 		return $device;
 	}
 
+	public function device_basic($data = null) {
+		return $this->api->get('/api/s/' . $this->site_id . '/stat/device-basic', $data);
+	}
+
 	public function devices($data = null) {
 		try {
-			$devices = $this->api->get('/api/s/' . $this->site_id . '/stat/device-basic', $data);
+			$devices = $this->device_basic($data);
 		} catch (ClientException $e) {
 			return null;
 		}
