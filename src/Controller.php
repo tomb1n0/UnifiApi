@@ -25,6 +25,12 @@ class Controller {
 		}
 	}
 
+	private function default_wanted_fields() {
+		return [
+			'model',
+		];
+	}
+
 	public function api() {
 		return $this->api;
 	}
@@ -57,9 +63,13 @@ class Controller {
 		} catch (ClientException $e) {
 			return null;
 		}
-		if (empty($wanted_fields)) {
-			$wanted_fields[] = 'model';
-		}
+		// always have model in the wanted fields by default
+		$wanted_fields = array_unique(
+			array_merge(
+				$wanted_fields,
+				$this->default_wanted_fields()
+			)
+		);
 		return array_map(function ($device) use ($wanted_fields) {
 				list($full_info) = $this->api->get('/api/s/' . $this->site_id . '/stat/device', ['macs' => [$device->mac]]);
 				foreach ($wanted_fields as $key) {
