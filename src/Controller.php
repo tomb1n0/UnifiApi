@@ -51,16 +51,22 @@ class Controller {
 		return $this->api->get('/api/s/' . $this->site_id . '/stat/device-basic', $data);
 	}
 
-	public function devices($data = null) {
+	public function devices($data = null, $wanted_fields = []) {
 		try {
 			$devices = $this->device_basic($data);
 		} catch (ClientException $e) {
 			return null;
 		}
-		return array_map(function ($device) {
-				// figure out the type of device we're working with and return an instance of that, otherwise just return the default "device" object.
-				$full_info = $this->api->get('/api/s/' . $this->site_id . '/stat/device', ['macs' => [$device->mac]]);
-				$device->model = $full_info[0]->model;
+		if (empty($wanted_fields)) {
+			$wanted_fields[] = 'model';
+		}
+		return array_map(function ($device) use ($wanted_fields) {
+				list($full_info) = $this->api->get('/api/s/' . $this->site_id . '/stat/device', ['macs' => [$device->mac]]);
+				foreach ($wanted_fields as $key) {
+					if (isset($full_info->$key)) {
+						$device->$key = $full_info->$key;
+					}
+				}
 				switch ($device->model) {
 					case 'U2IW':
 					case 'U7IW':
