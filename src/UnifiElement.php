@@ -15,10 +15,15 @@ abstract class UnifiElement {
 	}
 
 	public function __get($key) {
-		if (isset($this->config->$key)) {
+		if (property_exists($this->config, $key)) {
 			return $this->config->$key;
 		}
-		return null;
+		$trace = debug_backtrace();
+		throw new \Exception(
+			'Undefined property via __get(): ' . $key .
+			' in ' . $trace[0]['file'] .
+			' on line ' . $trace[0]['line']
+		);
 	}
 
 	public function getData() {
