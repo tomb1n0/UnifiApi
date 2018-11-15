@@ -35,4 +35,8 @@ class WallPlateAP extends Device {
 		$this->api->put('/api/s/' . $this->site_id . '/rest/device/' . $this->_id, $data);
 	}
 
+	public function icon() {
+		return 'UAP-AC-IW.min.svg';
+	}
+
 }

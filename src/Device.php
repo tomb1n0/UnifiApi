@@ -39,4 +39,8 @@ class Device extends UnifiElement {
 		]);
 	}
 
+	public function icon() {
+		return 'UniFi_AP_UAP-48.min.svg';
+	}
+
 }
