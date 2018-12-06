@@ -7,6 +7,7 @@ use GuzzleHttp\Exception\ClientException;
 class Controller {
 
 	use Traits\Wlans;
+	use Traits\Clients;
 
 	protected $config;
 	protected $site;
@@ -32,15 +33,6 @@ class Controller {
 
 	public function site_id() {
 		return $this->site_id;
-	}
-
-	public function online_clients() {
-		return array_map(
-			function ($client) {
-				return new Client($client, $this->api);
-			},
-			$this->api->get('/api/s/' . $this->site_id . '/stat/sta')
-		);
 	}
 
 	public function device($mac_address, $wanted_fields = []) {
