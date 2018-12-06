@@ -4,8 +4,9 @@ namespace UnifiAPI;
 
 use GuzzleHttp\Exception\ClientException;
 
-
 class Controller {
+
+	use Traits\Wlans;
 
 	protected $config;
 	protected $site;
