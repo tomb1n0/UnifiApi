@@ -22,4 +22,15 @@ class GlobalController {
         }
     }
 
+    /**
+     * Execute the given closure against every unifi site we have
+     */
+    public function bulkAction(\Closure $callback) {
+        foreach ($this->controller->sites() as $site) {
+            if ($site->name == "default") continue;
+            $controller = new Controller($site->desc, $this->api);
+            call_user_func_array($callback, [$controller]);
+        }
+    }
+
 }
