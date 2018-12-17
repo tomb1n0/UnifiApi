@@ -8,6 +8,7 @@ class Controller {
 
 	use Traits\Wlans;
 	use Traits\Clients;
+	use Traits\RadiusProfiles;
 
 	protected $config;
 	protected $site;
@@ -16,6 +17,10 @@ class Controller {
 
 	public function __construct($site_name, &$api) {
 		$this->api = $api;
+		// check if we need to refresh our api instance
+		if ($this->api->site_name() != $site_name) {
+			$this->api->switch_site($site_name);
+		}
 		foreach ($this->sites() as $site) {
 			if ($site->desc == $site_name) {
 				$this->site = $site;

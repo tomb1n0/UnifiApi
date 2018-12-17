@@ -5,6 +5,7 @@ namespace UnifiAPI;
 class API {
 
 	protected $client;
+	protected $site_name;
 	protected $controller;
 	protected $global_controller;
 
@@ -14,6 +15,7 @@ class API {
 			'verify' => false,
 			'cookies' => new \GuzzleHttp\Cookie\CookieJar()
 		]);
+		$this->site_name = $site_name;
 		$this->login($username, $password);
 		$this->controller = new Controller($site_name, $this);
 		$this->global_controller = new GlobalController($this->controller);
@@ -65,6 +67,16 @@ class API {
 
 	public function global_controller() {
 		return $this->global_controller;
+	}
+
+	public function site_name() {
+		return $this->site_name;
+	}
+
+	public function switch_site($new_site_name) {
+		$this->site_name = $new_site_name;
+		$this->controller = new Controller($new_site_name, $this);
+		$this->global_controller = new GlobalController($this->controller);
 	}
 
 }
