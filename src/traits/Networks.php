@@ -2,7 +2,6 @@
 
 namespace UnifiAPI\Traits;
 
-use \UnifiAPI\Client;
 use \UnifiAPI\Network;
 use \UnifiAPI\PortConf;
 
