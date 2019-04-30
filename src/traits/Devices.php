@@ -4,6 +4,7 @@ namespace UnifiAPI\Traits;
 
 use \UnifiAPI\WallPlateAP;
 use \UnifiAPI\Device;
+use GuzzleHttp\Exception\ClientException;
 
 trait Devices {
 
