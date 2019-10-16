@@ -2,6 +2,15 @@
 
 namespace UnifiAPI;
 
+use GuzzleHttp\Exception\ClientException as GuzzleClientException;
+use GuzzleHttp\Exception\ConnectException as GuzzleConnectException;
+use GuzzleHttp\Exception\ServerException as GuzzleServerException;
+
+use UnifiAPI\Exceptions\InvalidLoginException;
+use UnifiAPI\Exceptions\ClientException;
+use UnifiAPI\Exceptions\ServerException;
+use UnifiAPI\Exceptions\ConnectionException;
+
 class API {
 
 	protected $client;
@@ -16,13 +25,31 @@ class API {
 			'cookies' => new \GuzzleHttp\Cookie\CookieJar()
 		]);
 		$this->site_name = $site_name;
+
 		$this->login($username, $password);
 		$this->controller = new Controller($site_name, $this);
 		$this->global_controller = new GlobalController($this->controller);
 	}
 
 	public function request($request_type, $url, $data = []) {
-		return json_decode($this->client->request($request_type, $url, ['json' => $data])->getBody()->getContents())->data;
+		try {
+			$response = $this->client->request($request_type, $url, ['json' => $data]);
+			$contents = $response->getBody()->getContents();
+			return json_decode($contents)->data;
+		} catch (GuzzleConnectException $e) {
+			throw new ConnectionException($e->getMessage());
+		} catch (GuzzleClientException $e) {
+			$path = $e->getRequest()->getUri()->getPath();
+			if ($e->hasResponse()) {
+				$error = json_decode($e->getResponse()->getBody()->getContents());
+				if ($path == '/api/login' && $error->meta->msg == 'api.err.Invalid') {
+					throw new InvalidLoginException("Incorrect username or password.");
+				}
+			}
+			throw new ClientException($e->getMessage());
+		} catch (GuzzleServerException $e) {
+			throw new ServerException($e->getMessage());
+		}
 	}
 
 	public function get($url, $data = []) {
