@@ -42,6 +42,10 @@ class Controller {
 		return $this->site_id;
 	}
 
+	public function site() {
+		return $this->site;
+	}
+
 	public function sites() {
 		return $this->api->get('api/self/sites');
 	}
