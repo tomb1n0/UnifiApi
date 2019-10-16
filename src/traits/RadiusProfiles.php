@@ -13,4 +13,17 @@ trait RadiusProfiles {
 		}, $profiles);
 	}
 
+	public function radiusProfileByName($name) {
+		$profiles = $this->radiusProfiles();
+		foreach ($profiles as $profile) {
+			if (strtolower($profile->name) == strtolower($name)) {
+				return $profile;
+			}
+		}
+	}
+
+	public function createRadiusProfile($data) {
+		$this->api->post('/api/s/' . $this->site_id . '/rest/radiusprofile', $data);
+	}
+
 }
