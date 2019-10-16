@@ -22,12 +22,13 @@ class API {
 	private $password;
 	protected $logged_in;
 
-	public function __construct($url, $site_name, $username, $password) {
-		$this->client = new \GuzzleHttp\Client([
+	public function __construct($url, $site_name, $username, $password, $custom_options = []) {
+		$options = array_replace([
 			'base_uri' => $url,
 			'verify' => false,
 			'cookies' => new \GuzzleHttp\Cookie\CookieJar()
-		]);
+		], $custom_options);
+		$this->client = new \GuzzleHttp\Client($options);
 		$this->site_name = $site_name;
 		$this->username = $username;
 		$this->password = $password;
