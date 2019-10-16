@@ -23,7 +23,7 @@ class API {
 	protected $logged_in;
 
 	public function __construct($url, $site_name, $username, $password, $custom_options = []) {
-		$options = array_replace([
+		$options = array_merge_recursive([
 			'base_uri' => $url,
 			'verify' => false,
 			'cookies' => new \GuzzleHttp\Cookie\CookieJar()
