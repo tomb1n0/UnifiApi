@@ -17,6 +17,9 @@ class API {
 	protected $site_name;
 	protected $controller;
 	protected $global_controller;
+	private $username;
+	private $password;
+	protected $logged_in;
 
 	public function __construct($url, $site_name, $username, $password) {
 		$this->client = new \GuzzleHttp\Client([
@@ -25,13 +28,18 @@ class API {
 			'cookies' => new \GuzzleHttp\Cookie\CookieJar()
 		]);
 		$this->site_name = $site_name;
-
-		$this->login($username, $password);
+		$this->username = $username;
+		$this->password = $password;
+		$this->logged_in = false;
 		$this->controller = new Controller($site_name, $this);
 		$this->global_controller = new GlobalController($this->controller);
 	}
 
 	public function request($request_type, $url, $data = []) {
+		if (!$this->logged_in && $url !== '/api/login') {
+			$res = $this->login();
+			$this->logged_in = true;
+		}
 		try {
 			$response = $this->client->request($request_type, $url, ['json' => $data]);
 			$contents = $response->getBody()->getContents();
@@ -39,10 +47,10 @@ class API {
 		} catch (GuzzleConnectException $e) {
 			throw new ConnectionException($e->getMessage());
 		} catch (GuzzleClientException $e) {
-			$path = $e->getRequest()->getUri()->getPath();
 			if ($e->hasResponse()) {
 				$error = json_decode($e->getResponse()->getBody()->getContents());
-				if ($path == '/api/login' && $error->meta->msg == 'api.err.Invalid') {
+				if ($url == '/api/login' && $error->meta->msg == 'api.err.Invalid') {
+					$this->logged_in = false;
 					throw new InvalidLoginException("Incorrect username or password.");
 				}
 			}
@@ -80,12 +88,12 @@ class API {
 		return $this->request('PUT', $url, $data);
 	}
 
-	public function login($username, $password) {
-		$this->post('/api/login',['username' => $username , 'password' => $password]);
+	public function login() {
+		return $this->post('/api/login',['username' => $this->username , 'password' => $this->password]);
 	}
 
 	public function logout() {
-		$this->get('/logout');
+		return $this->get('/logout');
 	}
 
 	public function controller() {
