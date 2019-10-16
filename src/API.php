@@ -31,8 +31,6 @@ class API {
 		$this->username = $username;
 		$this->password = $password;
 		$this->logged_in = false;
-		$this->controller = new Controller($site_name, $this);
-		$this->global_controller = new GlobalController($this->controller);
 	}
 
 	public function request($request_type, $url, $data = []) {
@@ -97,10 +95,16 @@ class API {
 	}
 
 	public function controller() {
+		if (!isset($this->controller)) {
+			$this->controller = new Controller($this->site_name, $this);
+		}
 		return $this->controller;
 	}
 
 	public function global_controller() {
+		if (!isset($this->global_controller)) {
+			$this->global_controller = new GlobalController($this->controller());
+		}
 		return $this->global_controller;
 	}
 
