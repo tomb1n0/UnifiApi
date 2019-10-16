@@ -10,6 +10,7 @@ use UnifiAPI\Exceptions\InvalidLoginException;
 use UnifiAPI\Exceptions\ClientException;
 use UnifiAPI\Exceptions\ServerException;
 use UnifiAPI\Exceptions\ConnectionException;
+use UnifiAPI\Exceptions\UnifiAPIException;
 
 class API {
 
@@ -116,6 +117,24 @@ class API {
 		$this->site_name = $new_site_name;
 		$this->controller = new Controller($new_site_name, $this);
 		$this->global_controller = new GlobalController($this->controller);
+	}
+
+	/**
+	 * Try calling the /api/self endpoint.
+	 * If we don't get an exception then we got a valid response and our controller must be online.
+	 *
+	 * @return bool|throws UnifiAPIException
+	 */
+	public function online() {
+		try {
+			$this->get('/api/self');
+			return true;
+		} catch (InvalidLoginException $e) {
+			throw $e;
+		} catch (UnifiAPIException $e) {
+			return false;
+		}
+		return false;
 	}
 
 }
