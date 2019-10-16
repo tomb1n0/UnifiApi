@@ -3,6 +3,7 @@
 namespace UnifiAPI;
 
 use GuzzleHttp\Exception\ClientException;
+use UnifiAPI\Exceptions\InvalidSiteException;
 
 class Controller {
 
@@ -30,7 +31,7 @@ class Controller {
 			}
 		}
 		if (!isset($this->site)) {
-			throw new \Exception('No such site ' . $site_name . ' exists');
+			throw new InvalidSiteException('No such site ' . $site_name . ' exists');
 		}
 	}
 

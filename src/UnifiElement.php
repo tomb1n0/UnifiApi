@@ -2,6 +2,8 @@
 
 namespace UnifiAPI;
 
+use UnifiAPI\Exceptions\UndefinedPropertyException;
+
 abstract class UnifiElement {
 
 	protected $config;
@@ -19,7 +21,7 @@ abstract class UnifiElement {
 			return $this->config->$key;
 		}
 		$trace = debug_backtrace();
-		throw new \Exception(
+		throw new UndefinedPropertyException(
 			'Undefined property via __get(): ' . $key .
 			' in ' . $trace[0]['file'] .
 			' on line ' . $trace[0]['line']
