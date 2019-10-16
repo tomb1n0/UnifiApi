@@ -35,7 +35,7 @@ class API {
 
 	public function request($request_type, $url, $data = []) {
 		if (!$this->logged_in && $url !== '/api/login') {
-			$res = $this->login();
+			$this->login();
 			$this->logged_in = true;
 		}
 		try {
