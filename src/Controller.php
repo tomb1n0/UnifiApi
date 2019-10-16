@@ -54,4 +54,8 @@ class Controller {
 		return $this->api->get('/api/s/' . $this->site_id . '/stat/health', $data);
 	}
 
+	public function widgetHealth($data = []) {
+		return $this->api->get('/api/s/' . $this->site_id . '/stat/widget/health', $data)[0];
+	}
+
 }
