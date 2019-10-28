@@ -18,8 +18,8 @@ class API {
 	protected $site_name;
 	protected $controller;
 	protected $global_controller;
-	private $username;
-	private $password;
+	protected $username;
+	protected $password;
 	protected $logged_in;
 
 	public function __construct($url, $site_name, $username, $password, $custom_options = []) {
