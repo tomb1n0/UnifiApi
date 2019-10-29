@@ -59,4 +59,8 @@ class Controller {
 		return $this->api->get('/api/s/' . $this->site_id . '/stat/widget/health', $data)[0];
 	}
 
+	public function insights($hours = 1) {
+		return $this->api->get('/api/s/' . $this->site_id . '/stat/rogueap?within=' . $hours . '&_limit=10000');
+	}
+
 }
