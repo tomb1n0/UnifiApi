@@ -128,4 +128,11 @@ trait Networks {
 		return $this->get_switch_port_profile($native_vlan, $tagged_vlans);
 	}
 
+	public function get_port_conf_by_name($name) {
+		$port_confs = $this->port_confs(['name' => $name]);
+		if (!empty($port_confs)) {
+			return $port_confs[0];
+		}
+	}
+
 }
