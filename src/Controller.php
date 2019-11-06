@@ -63,4 +63,17 @@ class Controller {
 		return $this->api->get('/api/s/' . $this->site_id . '/stat/rogueap?within=' . $hours . '&_limit=10000');
 	}
 
+	public function delete_site() {
+		return $this->api->post('/api/s/' . $this->site_id . '/cmd/sitemgr', ['site' => $this->site->_id, 'cmd' => 'delete-site']);
+	}
+
+	public function create_site($name) {
+		foreach ($this->sites() as $site) {
+			if ($site->desc == $name) {
+				throw new InvalidSiteException('Site ' . $name . ' already exists');
+			}
+		}
+		return $this->api->post('/api/s/' . $this->site_id . '/cmd/sitemgr', ['desc' => $name, 'cmd' => 'add-site']);
+	}
+
 }
