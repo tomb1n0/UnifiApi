@@ -27,6 +27,14 @@ class Device extends UnifiElement {
 		}
 	}
 
+	public function upgrade_custom($model,$url) {
+		if ($model!=$this->model) {
+			throw new \Exception('Not upgrading - device ' . $this->mac . ' is of type ' . $this->model. ' not '.$model);
+		}
+		$this->api->post('/api/s/' . $this->site_id . '/cmd/devmgr', ['url' => $url, 'mac' => $this->mac, 'cmd' => 'upgrade-external']);
+
+	}
+
 	public function name($newname) {
 		$this->api->put('/api/s/' . $this->site_id . '/rest/device/' . $this->_id, ["name" => $newname]);
 	}
