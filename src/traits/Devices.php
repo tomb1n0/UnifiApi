@@ -66,15 +66,12 @@ trait Devices {
 		return $out;
 	}
 
-	public function unadopted_devices() {
-		$devices = $this->api->get('/api/s/' . $this->site_id . '/stat/device');
-		$ret_devs = [];
-		foreach ($devices as $device) {
-			if (!$device->adopted) {
-				$ret_devs[] = new Device($device, $this->api);
-			}
-		}
-		return $ret_devs;
+	public function unadopted_devices($wanted_fields = []) {
+		$devices = $this->devices_basic();
+		$macs = array_map(function ($device) {
+			return !$device->adopted ? $device->mac : null;
+		}, $devices);
+		return $this->build_devices(array_filter($macs), $wanted_fields, 100 /*unadopted devices are much smaller*/);
 	}
 
 }
