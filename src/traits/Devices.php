@@ -17,6 +17,14 @@ trait Devices {
 		return $this->api->get('/api/s/' . $this->site_id . '/stat/device-basic');
 	}
 
+	public function device_index() {
+		return $this->devices_basic();
+	}
+
+	public function devices_by_mac($macs, $wanted_fields = [], $chunk_size = 40) {
+		return $this->build_devices($macs, $wanted_fields, $chunk_size);
+	}
+
 	//$chunk_size allows tradeoff between max memory usage and number of api requests(speed)
 	// smaller -> more memory efficient but slower
 	public function all_devices($wanted_fields = [], $chunk_size = 40) {
