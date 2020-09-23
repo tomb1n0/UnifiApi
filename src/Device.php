@@ -11,6 +11,10 @@ class Device extends UnifiElement {
 		$this->api->post('/api/s/' . $this->site_id . '/cmd/devmgr', ['mac' => $this->mac, 'cmd' => 'adopt']);
 	}
 
+	public function restart() {
+		$this->api->post('/api/s/' . $this->site_id . '/cmd/devmgr', ['mac' => $this->mac, 'cmd' => 'restart', 'reboot_type' => 'soft']);
+	}
+
 	public function forget() {
 		$this->api->post('/api/s/' . $this->site_id . '/cmd/sitemgr', ['mac' => $this->mac, 'cmd' => 'delete-device']);
 	}
