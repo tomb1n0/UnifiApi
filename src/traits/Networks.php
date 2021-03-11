@@ -113,6 +113,7 @@ trait Networks {
 			'name'=> 'Vlan ' . $native_vlan_id . ' Switch Port Profile',
 			'native_networkconf_id' => $native_network_id,
 			'op_mode' => 'switch',
+			'stp_port_mode' => true,
 			'tagged_networkconf_ids' => $tagged_networks_ids
 		];
 		$this->api->post('/api/s/' . $this->site_id . '/rest/portconf', $data);
