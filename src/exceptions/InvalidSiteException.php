@@ -2,6 +2,6 @@
 
 namespace UnifiAPI\Exceptions;
 
-class InvalidSiteException extends UnifiAPIException {
-    
+class InvalidSiteException extends UnifiAPIException
+{
 }

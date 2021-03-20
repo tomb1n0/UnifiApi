@@ -2,17 +2,19 @@
 
 namespace UnifiAPI;
 
-class GlobalController {
-
+class GlobalController
+{
     protected $api;
     protected $controller;
 
-    public function __construct($controller) {
+    public function __construct($controller)
+    {
         $this->controller = $controller;
         $this->api = $controller->api();
     }
 
-    public function find_site_from_mac($mac_address) {
+    public function find_site_from_mac($mac_address)
+    {
         foreach ($this->controller->sites() as $site) {
             if ($site->name == "default") continue;
             $controller = new Controller($site->desc, $this->api);
@@ -25,11 +27,11 @@ class GlobalController {
     /**
      * Execute the given closure against every unifi site we have
      */
-    public function eachSite(\Closure $callback) {
+    public function eachSite(\Closure $callback)
+    {
         foreach ($this->controller->sites() as $site) {
             if ($site->name == "default") continue;
             call_user_func_array($callback, [new Controller($site->desc, $this->api), $site->desc]);
         }
     }
-
 }

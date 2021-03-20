@@ -4,7 +4,6 @@ namespace UnifiAPI;
 
 class Device extends UnifiElement
 {
-
     public function adopt()
     {
         if ($this->adopted) {

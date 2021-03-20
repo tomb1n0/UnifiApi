@@ -21,8 +21,8 @@ $controller = $api->controller();
 $devices = $controller->unadopted_devices();
 
 foreach ($devices as $device) {
-	// devices are returned as their own object which have a ref to the API
-	$device->adopt();
+    // devices are returned as their own object which have a ref to the API
+    $device->adopt();
 }
 
 // you can fetch the networks from the controller, optionally providing data to filter on such as the VLAN number. pretty cool!

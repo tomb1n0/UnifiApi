@@ -2,6 +2,6 @@
 
 namespace UnifiAPI\Exceptions;
 
-class ConnectionException extends UnifiAPIException {
-    
+class ConnectionException extends UnifiAPIException
+{
 }
