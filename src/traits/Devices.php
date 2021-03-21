@@ -6,25 +6,6 @@ use GuzzleHttp\Exception\ClientException;
 
 trait Devices
 {
-    // Can't use ::class as we need to support php 5.4 :(
-    protected $models = [
-        'Default' => '\UnifiAPI\Device',
-
-        // Wallplate APs
-        'U7IW' => '\UnifiAPI\WallPlateAP',
-        'U7IWP' => '\UnifiAPI\WallPlateAP',
-        'UHDIW' => '\UnifiAPI\WallPlateAP',
-
-        // "UFO" Aps
-        'BZ2' => '\UnifiApi\UfoAP',
-        'U7HD' => '\UnifiApi\UfoAP',
-        'U7LR' => '\UnifiApi\UfoAP',
-        'U7LT' => '\UnifiApi\UfoAP',
-        'U7NHD' => '\UnifiApi\UfoAP',
-        'U7P' => '\UnifiApi\UfoAP',
-        'U7PG2' => '\UnifiApi\UfoAP',
-    ];
-
     public function device($mac_address, $wanted_fields = [])
     {
         $devices = $this->build_devices([$mac_address], $wanted_fields, 1);

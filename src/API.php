@@ -22,6 +22,31 @@ class API
     protected $password;
     protected $logged_in;
 
+    /**
+     * A mapping between unifi models and their corresponding class
+     * 
+     * This can be changed by calling withModels 
+     *
+     * @var array
+     */
+    protected $models = [
+        'Default' => '\UnifiAPI\Device',
+
+        // Wallplate APs
+        'U7IW' => '\UnifiAPI\WallPlateAP',
+        'U7IWP' => '\UnifiAPI\WallPlateAP',
+        'UHDIW' => '\UnifiAPI\WallPlateAP',
+
+        // "UFO" Aps
+        'BZ2' => '\UnifiApi\UfoAP',
+        'U7HD' => '\UnifiApi\UfoAP',
+        'U7LR' => '\UnifiApi\UfoAP',
+        'U7LT' => '\UnifiApi\UfoAP',
+        'U7NHD' => '\UnifiApi\UfoAP',
+        'U7P' => '\UnifiApi\UfoAP',
+        'U7PG2' => '\UnifiApi\UfoAP',
+    ];
+
     public function __construct($url, $site_name, $username, $password, $custom_guzzle_options = [])
     {
         $options = array_merge_recursive([
@@ -29,11 +54,19 @@ class API
             'verify' => false,
             'cookies' => new \GuzzleHttp\Cookie\CookieJar()
         ], $custom_guzzle_options);
+
         $this->client = new \GuzzleHttp\Client($options);
         $this->site_name = $site_name;
         $this->username = $username;
         $this->password = $password;
         $this->logged_in = false;
+    }
+
+    public function withModels($models = [])
+    {
+        $this->models = array_merge($this->models, $models);
+
+        return $this;
     }
 
     public function request($request_type, $url, $data = [])
@@ -107,11 +140,17 @@ class API
         return $this->get('/logout');
     }
 
+    public function models()
+    {
+        return $this->models;
+    }
+
     public function controller()
     {
         if (!isset($this->controller)) {
             $this->controller = new Controller($this->site_name, $this);
         }
+
         return $this->controller;
     }
 

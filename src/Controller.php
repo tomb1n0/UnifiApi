@@ -17,20 +17,25 @@ class Controller
     protected $site;
     protected $site_id;
     protected $api;
+    protected $models;
 
     public function __construct($site_name, &$api)
     {
         $this->api = $api;
+        $this->models = $api->models();
+
         // check if we need to refresh our api instance
         if ($this->api->site_name() != $site_name) {
             $this->api->switch_site($site_name);
         }
+
         foreach ($this->sites() as $site) {
             if ($site->desc == $site_name) {
                 $this->site = $site;
                 $this->site_id = $site->name;
             }
         }
+
         if (!isset($this->site)) {
             throw new InvalidSiteException('No such site ' . $site_name . ' exists');
         }
