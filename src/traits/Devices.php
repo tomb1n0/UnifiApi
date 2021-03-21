@@ -2,17 +2,18 @@
 
 namespace UnifiAPI\Traits;
 
-use \UnifiAPI\WallPlateAP;
-use \UnifiAPI\Device;
 use GuzzleHttp\Exception\ClientException;
 
 trait Devices
 {
+    // Can't use ::class as we need to support php 5.4 :(
     protected $models = [
-        // Doesn't support management VLANs so just use regular device class
-        'U2IW' => Device::class,
-        'U7IW' => WallPlateAP::class,
-        'U7IWP' => WallPlateAP::class
+        'Default' => '\UnifiAPI\Device',
+
+        // Wallplate APs
+        'U2IW' => '\UnifiAPI\Device', // doesn't support management vlan so just use regular device class
+        'U7IW' => '\UnifiAPI\WallPlateAP',
+        'U7IWP' => '\UnifiAPI\WallPlateAP'
     ];
 
     public function device($mac_address, $wanted_fields = [])
@@ -73,7 +74,7 @@ trait Devices
 
                 $modelClass = array_key_exists($device->model, $this->models)
                     ? $this->models[$device->model]
-                    : Device::class;
+                    : $this->models['Default'];
 
                 $out[] = new $modelClass($device, $this->api);
             }
