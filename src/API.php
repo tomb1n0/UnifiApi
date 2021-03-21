@@ -22,13 +22,13 @@ class API
     protected $password;
     protected $logged_in;
 
-    public function __construct($url, $site_name, $username, $password, $custom_options = [])
+    public function __construct($url, $site_name, $username, $password, $custom_guzzle_options = [])
     {
         $options = array_merge_recursive([
             'base_uri' => $url,
             'verify' => false,
             'cookies' => new \GuzzleHttp\Cookie\CookieJar()
-        ], $custom_options);
+        ], $custom_guzzle_options);
         $this->client = new \GuzzleHttp\Client($options);
         $this->site_name = $site_name;
         $this->username = $username;
