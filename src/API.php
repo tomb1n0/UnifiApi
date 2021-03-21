@@ -38,13 +38,13 @@ class API
         'UHDIW' => '\UnifiAPI\WallPlateAP',
 
         // "UFO" Aps
-        'BZ2' => '\UnifiApi\UfoAP',
-        'U7HD' => '\UnifiApi\UfoAP',
-        'U7LR' => '\UnifiApi\UfoAP',
-        'U7LT' => '\UnifiApi\UfoAP',
-        'U7NHD' => '\UnifiApi\UfoAP',
-        'U7P' => '\UnifiApi\UfoAP',
-        'U7PG2' => '\UnifiApi\UfoAP',
+        'BZ2' => '\UnifiAPI\UfoAP',
+        'U7HD' => '\UnifiAPI\UfoAP',
+        'U7LR' => '\UnifiAPI\UfoAP',
+        'U7LT' => '\UnifiAPI\UfoAP',
+        'U7NHD' => '\UnifiAPI\UfoAP',
+        'U7P' => '\UnifiAPI\UfoAP',
+        'U7PG2' => '\UnifiAPI\UfoAP',
     ];
 
     public function __construct($url, $site_name, $username, $password, $custom_guzzle_options = [])
