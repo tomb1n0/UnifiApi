@@ -11,9 +11,18 @@ trait Devices
         'Default' => '\UnifiAPI\Device',
 
         // Wallplate APs
-        'U2IW' => '\UnifiAPI\Device', // doesn't support management vlan so just use regular device class
         'U7IW' => '\UnifiAPI\WallPlateAP',
-        'U7IWP' => '\UnifiAPI\WallPlateAP'
+        'U7IWP' => '\UnifiAPI\WallPlateAP',
+        'UHDIW' => '\UnifiAPI\WallPlateAP',
+
+        // "UFO" Aps
+        'BZ2' => '\UnifiApi\UfoAP',
+        'U7HD' => '\UnifiApi\UfoAP',
+        'U7LR' => '\UnifiApi\UfoAP',
+        'U7LT' => '\UnifiApi\UfoAP',
+        'U7NHD' => '\UnifiApi\UfoAP',
+        'U7P' => '\UnifiApi\UfoAP',
+        'U7PG2' => '\UnifiApi\UfoAP',
     ];
 
     public function device($mac_address, $wanted_fields = [])
