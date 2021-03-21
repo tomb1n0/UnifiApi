@@ -2,6 +2,6 @@
 
 namespace UnifiAPI\Exceptions;
 
-class UnifiAPIException extends \Exception {
-    
+class UnifiAPIException extends \Exception
+{
 }

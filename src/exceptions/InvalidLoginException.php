@@ -2,6 +2,6 @@
 
 namespace UnifiAPI\Exceptions;
 
-class InvalidLoginException extends UnifiAPIException {
-    
+class InvalidLoginException extends UnifiAPIException
+{
 }

@@ -12,130 +12,184 @@ use UnifiAPI\Exceptions\ServerException;
 use UnifiAPI\Exceptions\ConnectionException;
 use UnifiAPI\Exceptions\UnifiAPIException;
 
-class API {
+class API
+{
+    protected $client;
+    protected $site_name;
+    protected $controller;
+    protected $global_controller;
+    protected $username;
+    protected $password;
+    protected $logged_in;
 
-	protected $client;
-	protected $site_name;
-	protected $controller;
-	protected $global_controller;
-	protected $username;
-	protected $password;
-	protected $logged_in;
+    /**
+     * A mapping between unifi models and their corresponding class
+     * 
+     * This can be changed by calling withModels 
+     *
+     * @var array
+     */
+    protected $models = [
+        'Default' => '\UnifiAPI\Device',
 
-	public function __construct($url, $site_name, $username, $password, $custom_options = []) {
-		$options = array_merge_recursive([
-			'base_uri' => $url,
-			'verify' => false,
-			'cookies' => new \GuzzleHttp\Cookie\CookieJar()
-		], $custom_options);
-		$this->client = new \GuzzleHttp\Client($options);
-		$this->site_name = $site_name;
-		$this->username = $username;
-		$this->password = $password;
-		$this->logged_in = false;
-	}
+        // Wallplate APs
+        'U7IW' => '\UnifiAPI\WallPlateAP',
+        'U7IWP' => '\UnifiAPI\WallPlateAP',
+        'UHDIW' => '\UnifiAPI\WallPlateAP',
 
-	public function request($request_type, $url, $data = []) {
-		if (!$this->logged_in && $url !== '/api/login') {
-			$this->login();
-			$this->logged_in = true;
-		}
-		try {
-			$response = $this->client->request($request_type, $url, ['json' => $data]);
-			$contents = $response->getBody()->getContents();
-			return json_decode($contents)->data;
-		} catch (GuzzleConnectException $e) {
-			throw new ConnectionException($e->getMessage());
-		} catch (GuzzleClientException $e) {
-			if ($e->hasResponse()) {
-				$error = json_decode($e->getResponse()->getBody()->getContents());
-				if ($url == '/api/login' && $error->meta->msg == 'api.err.Invalid') {
-					$this->logged_in = false;
-					throw new InvalidLoginException("Incorrect username or password.");
-				}
-			}
-			throw new ClientException($e->getMessage());
-		} catch (GuzzleServerException $e) {
-			throw new ServerException($e->getMessage());
-		}
-	}
+        // "UFO" Aps
+        'BZ2' => '\UnifiApi\UfoAP',
+        'U7HD' => '\UnifiApi\UfoAP',
+        'U7LR' => '\UnifiApi\UfoAP',
+        'U7LT' => '\UnifiApi\UfoAP',
+        'U7NHD' => '\UnifiApi\UfoAP',
+        'U7P' => '\UnifiApi\UfoAP',
+        'U7PG2' => '\UnifiApi\UfoAP',
+    ];
 
-	public function get($url, $data = []) {
-		return $this->request('GET', $url, $data);
-	}
+    public function __construct($url, $site_name, $username, $password, $custom_guzzle_options = [])
+    {
+        $options = array_merge_recursive([
+            'base_uri' => $url,
+            'verify' => false,
+            'cookies' => new \GuzzleHttp\Cookie\CookieJar()
+        ], $custom_guzzle_options);
 
-	public function post($url, $data = []) {
-		return $this->request('POST', $url, $data);
-	}
+        $this->client = new \GuzzleHttp\Client($options);
+        $this->site_name = $site_name;
+        $this->username = $username;
+        $this->password = $password;
+        $this->logged_in = false;
+    }
 
-	public function delete($url, $data = []) {
-		return $this->request('DELETE', $url, $data);
-	}
+    public function withModels($models = [])
+    {
+        $this->models = array_merge($this->models, $models);
 
-	public function head($url, $data = []) {
-		return $this->request('HEAD', $url, $data);
-	}
+        return $this;
+    }
 
-	public function options($url, $data = []) {
-		return $this->request('OPTIONS', $url, $data);
-	}
+    public function request($request_type, $url, $data = [])
+    {
+        if (!$this->logged_in && $url !== '/api/login') {
+            $this->login();
+            $this->logged_in = true;
+        }
+        try {
+            $response = $this->client->request($request_type, $url, ['json' => $data]);
+            $contents = $response->getBody()->getContents();
+            return json_decode($contents)->data;
+        } catch (GuzzleConnectException $e) {
+            throw new ConnectionException($e->getMessage());
+        } catch (GuzzleClientException $e) {
+            if ($e->hasResponse()) {
+                $error = json_decode($e->getResponse()->getBody()->getContents());
+                if ($url == '/api/login' && $error->meta->msg == 'api.err.Invalid') {
+                    $this->logged_in = false;
+                    throw new InvalidLoginException("Incorrect username or password.");
+                }
+            }
+            throw new ClientException($e->getMessage());
+        } catch (GuzzleServerException $e) {
+            throw new ServerException($e->getMessage());
+        }
+    }
 
-	public function patch($url, $data = []) {
-		return $this->request('PATCH', $url, $data);
-	}
+    public function get($url, $data = [])
+    {
+        return $this->request('GET', $url, $data);
+    }
 
-	public function put($url, $data = []) {
-		return $this->request('PUT', $url, $data);
-	}
+    public function post($url, $data = [])
+    {
+        return $this->request('POST', $url, $data);
+    }
 
-	public function login() {
-		return $this->post('/api/login',['username' => $this->username , 'password' => $this->password]);
-	}
+    public function delete($url, $data = [])
+    {
+        return $this->request('DELETE', $url, $data);
+    }
 
-	public function logout() {
-		return $this->get('/logout');
-	}
+    public function head($url, $data = [])
+    {
+        return $this->request('HEAD', $url, $data);
+    }
 
-	public function controller() {
-		if (!isset($this->controller)) {
-			$this->controller = new Controller($this->site_name, $this);
-		}
-		return $this->controller;
-	}
+    public function options($url, $data = [])
+    {
+        return $this->request('OPTIONS', $url, $data);
+    }
 
-	public function global_controller() {
-		if (!isset($this->global_controller)) {
-			$this->global_controller = new GlobalController($this->controller());
-		}
-		return $this->global_controller;
-	}
+    public function patch($url, $data = [])
+    {
+        return $this->request('PATCH', $url, $data);
+    }
 
-	public function site_name() {
-		return $this->site_name;
-	}
+    public function put($url, $data = [])
+    {
+        return $this->request('PUT', $url, $data);
+    }
 
-	public function switch_site($new_site_name) {
-		$this->site_name = $new_site_name;
-		$this->controller = new Controller($new_site_name, $this);
-		$this->global_controller = new GlobalController($this->controller);
-	}
+    public function login()
+    {
+        return $this->post('/api/login', ['username' => $this->username, 'password' => $this->password]);
+    }
 
-	/**
-	 * Try calling the /api/self endpoint.
-	 * If we don't get an exception then we got a valid response and our controller must be online.
-	 *
-	 * @return bool|throws UnifiAPIException
-	 */
-	public function online() {
-		try {
-			$this->get('/api/self');
-			return true;
-		} catch (InvalidLoginException $e) {
-			throw $e;
-		} catch (UnifiAPIException $e) {
-			return false;
-		}
-		return false;
-	}
+    public function logout()
+    {
+        return $this->get('/logout');
+    }
 
+    public function models()
+    {
+        return $this->models;
+    }
+
+    public function controller()
+    {
+        if (!isset($this->controller)) {
+            $this->controller = new Controller($this->site_name, $this);
+        }
+
+        return $this->controller;
+    }
+
+    public function global_controller()
+    {
+        if (!isset($this->global_controller)) {
+            $this->global_controller = new GlobalController($this->controller());
+        }
+        return $this->global_controller;
+    }
+
+    public function site_name()
+    {
+        return $this->site_name;
+    }
+
+    public function switch_site($new_site_name)
+    {
+        $this->site_name = $new_site_name;
+        $this->controller = new Controller($new_site_name, $this);
+        $this->global_controller = new GlobalController($this->controller);
+    }
+
+    /**
+     * Try calling the /api/self endpoint.
+     * If we don't get an exception then we got a valid response and our controller must be online.
+     *
+     * @return bool|throws UnifiAPIException
+     */
+    public function online()
+    {
+        try {
+            $this->get('/api/self');
+            return true;
+        } catch (InvalidLoginException $e) {
+            throw $e;
+        } catch (UnifiAPIException $e) {
+            return false;
+        }
+        return false;
+    }
 }

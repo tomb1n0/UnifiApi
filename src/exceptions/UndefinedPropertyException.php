@@ -2,6 +2,6 @@
 
 namespace UnifiAPI\Exceptions;
 
-class UndefinedPropertyException extends UnifiAPIException {
-    
+class UndefinedPropertyException extends UnifiAPIException
+{
 }

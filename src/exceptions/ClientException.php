@@ -2,6 +2,6 @@
 
 namespace UnifiAPI\Exceptions;
 
-class ClientException extends UnifiAPIException {
-    
+class ClientException extends UnifiAPIException
+{
 }
