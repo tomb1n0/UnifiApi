@@ -59,6 +59,14 @@ class Device extends UnifiElement
 
     public function icon()
     {
-        return 'UniFi_AP_UAP-48.min.svg';
+        if (array_key_exists($this->model, $this->icons)) {
+            return $this->icons[$this->model];
+        }
+
+        if (array_key_exists($this->type, $this->icons)) {
+            return $this->icons[$this->type];
+        }
+
+        throw new \Exception;
     }
 }

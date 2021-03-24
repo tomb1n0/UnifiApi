@@ -34,9 +34,4 @@ class WallPlateAP extends Device implements CanSetManagementVlan
         $data = ['port_overrides' => []];
         $this->api->put('/api/s/' . $this->site_id . '/rest/device/' . $this->_id, $data);
     }
-
-    public function icon()
-    {
-        return 'UAP-AC-IW.min.svg';
-    }
 }

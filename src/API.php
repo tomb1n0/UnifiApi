@@ -47,6 +47,8 @@ class API
         'U7PG2' => '\UnifiAPI\UfoAP',
     ];
 
+    protected $icons; // loaded in from icons.json
+
     public function __construct($url, $site_name, $username, $password, $custom_guzzle_options = [])
     {
         $options = array_merge_recursive([
@@ -60,6 +62,8 @@ class API
         $this->username = $username;
         $this->password = $password;
         $this->logged_in = false;
+
+        $this->icons = json_decode(file_get_contents(__DIR__ . '/../icons.json'), true);
     }
 
     public function withModels($models = [])
@@ -143,6 +147,11 @@ class API
     public function models()
     {
         return $this->models;
+    }
+
+    public function icons()
+    {
+        return $this->icons;
     }
 
     public function controller()
