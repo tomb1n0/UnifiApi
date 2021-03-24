@@ -98,6 +98,24 @@ trait Networks
         return $this->network_conf_for_vlan($vlan_id);
     }
 
+    private function generate_switch_port_profile_name($native_vlan_id)
+    {
+        $originalName =  'Vlan ' . $native_vlan_id . ' Switch Port Profile';
+        $name = $originalName;
+
+        $profiles = $this->port_confs(['name' => $name]);
+
+        $index = count($profiles) + 1;
+
+        while (!empty($profiles)) {
+            $name = $originalName . ' #' . $index;
+            $profiles = $this->port_confs(['name' => $name]);
+            $index++;
+        }
+
+        return $name;
+    }
+
     public function create_switch_port_profile($native_vlan_id, $tagged_vlan_ids = [])
     {
         if (in_array($native_vlan_id, $tagged_vlan_ids)) {
@@ -113,12 +131,13 @@ trait Networks
             $network = $this->get_or_create_vlan($vlan_id);
             $tagged_networks_ids[] = $network->_id;
         }
+
         $data = [
             'autoneg' => true,
             'dot1x_ctrl' => 'force_authorized',
             'forward' => 'customize',
             'lldpmed_enabled' => false,
-            'name' => 'Vlan ' . $native_vlan_id . ' Switch Port Profile',
+            'name' => $this->generate_switch_port_profile_name($native_vlan_id),
             'native_networkconf_id' => $native_network_id,
             'op_mode' => 'switch',
             'stp_port_mode' => true,
