@@ -9,14 +9,12 @@ abstract class UnifiElement
     protected $config;
     protected $api;
     protected $site_id;
-    protected $icons;
 
     public function __construct($data, &$api)
     {
         $this->api = $api;
         $this->config = $data;
         $this->site_id = $api->controller()->site_id();
-        $this->icons = $api->icons();
     }
 
     public function __get($key)
