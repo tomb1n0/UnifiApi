@@ -13,4 +13,9 @@ trait Wlans
             return new Wlan($wlan, $this->api);
         }, $wlans);
     }
+
+    public function createWlan($data = [])
+    {
+        $this->api->post('/api/s/' . $this->site_id . '/rest/wlanconf', $data);
+    }
 }
